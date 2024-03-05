@@ -1,9 +1,9 @@
-import Grid from "@mui/material/Grid";
-import "./App.css";
-import NavBar from "./components/NavBar";
-import EventsList from "./components/EventsList";
+import { Grid } from '@mui/material'
+import React from 'react'
+import EventsList from '../components/EventsList'
+import NavBar from '../components/NavBar'
 
-function App() {
+function HomePage() {
   return (
     <>
       <Grid container>
@@ -22,7 +22,7 @@ function App() {
         </Grid>
       </Grid>
     </>
-  );
+  )
 }
 
-export default App;
+export default HomePage
