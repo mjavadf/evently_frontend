@@ -5,19 +5,10 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
-  Link,
   TextField
 } from "@mui/material";
-import React from "react";
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-} from "react-router-dom";
 import AuthContainer from "../components/AuthContainer";
-
-const LinkBehavior = React.forwardRef<any, Omit<RouterLinkProps, "to">>(
-  (props, ref) => <RouterLink ref={ref} to="/" {...props} role={undefined} />
-);
+import MaterialRouterLink from "../components/MaterialRouterLink";
 
 function LoginPage() {
   return (
@@ -57,18 +48,17 @@ function LoginPage() {
         </Button>
         <Grid container>
           <Grid item xs>
-            <Link
+            <MaterialRouterLink
               variant="body2"
-              component={RouterLink}
               to={"/forgot_password"}
             >
               Forgot password?
-            </Link>
+            </MaterialRouterLink>
           </Grid>
           <Grid item>
-            <Link variant="body2" component={RouterLink} to={"/signup"}>
+            <MaterialRouterLink variant="body2" to={"/signup"}>
               {"Don't have an account? Sign Up"}
-            </Link>
+            </MaterialRouterLink>
           </Grid>
         </Grid>
       </Box>

@@ -4,22 +4,12 @@ import {
   Box,
   Button,
   Container,
-  Link,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-} from "react-router-dom";
 import { useEffect, useState } from "react";
-import React from "react";
-
-
-const LinkBehavior = React.forwardRef<any, Omit<RouterLinkProps, "to">>(
-  (props, ref) => <RouterLink ref={ref} to="/" {...props} role={undefined} />
-);
+import MaterialRouterLink from "./MaterialRouterLink";
 
 
 function NavBar() {
@@ -68,13 +58,13 @@ function NavBar() {
               </Button>
             ) : (
               <>
-                <Link to="/login" variant="body2" component={RouterLink}>
+                <MaterialRouterLink to="/login" variant="body2">
                   Login /{" "}
-                </Link>
-                <Link to="/signup" variant="body2" component={RouterLink}>
+                </MaterialRouterLink>
+                <MaterialRouterLink to="/signup" variant="body2">
                   {" "}
                   Sign-Up
-                </Link>
+                </MaterialRouterLink>
               </>
             )}
           </Box>
