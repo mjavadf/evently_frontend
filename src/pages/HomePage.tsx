@@ -6,10 +6,6 @@ import NavBar from '../components/NavBar'
 function HomePage() {
   return (
     <>
-      <Grid container>
-        <Grid item xs={12}>
-          <NavBar />
-        </Grid>
         <Grid
           item
           sx={{ display: { xs: "none", md: "block" } }}
@@ -20,7 +16,6 @@ function HomePage() {
         <Grid item xs={12} md={10}>
           <EventsList />
         </Grid>
-      </Grid>
     </>
   )
 }
