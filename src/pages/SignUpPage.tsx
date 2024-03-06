@@ -1,8 +1,10 @@
 import {
   Alert,
+  Backdrop,
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControlLabel,
   Grid,
   TextField,
@@ -31,10 +33,12 @@ function SignUpPage() {
 
   const [error, setError] = useState<string>("");
   const [successful, setSuccessful] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   let navigate: NavigateFunction = useNavigate();
 
   const onSubmit = (data: FieldValues) => {
+    setLoading(true)
     register(
       data.username,
       data.email,
@@ -46,15 +50,27 @@ function SignUpPage() {
       .then(() => {
         // navigate("/");
         setSuccessful(true);
+        setError('')
+        setLoading(false)
         // TO-DO: navigate to a new page
       })
       .catch((err) => {
         setError(err.response.data.detail|| err.message);
+        setLoading(false)
       });
   };
 
   return (
     <AuthContainer formTitle="Sign Up">
+      {loading && (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+          onClick={() => setLoading(false)}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box
         component="form"
         noValidate
@@ -68,9 +84,9 @@ function SignUpPage() {
         )}
         {successful && (
           <Alert variant="outlined" severity="success" sx={{ marginY: 2 }}  action={
-            <Button color="inherit" size="small" variant="text">
+            <MaterialRouterLink color="inherit" variant="button" to='/login' underline="none">
               Login
-            </Button>
+            </MaterialRouterLink>
           }>
             Registration was successful.
           </Alert>

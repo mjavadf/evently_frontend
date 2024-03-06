@@ -28,12 +28,22 @@ interface Props {
     | "subtitle1"
     | "subtitle2";
   underline?: "always" | "hover" | "none";
+  color?:
+    | "inherit"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "error"
+    | "info"
+    | "warning"
+    | string;
 }
 function MaterialRouterLink({
   children,
   to,
   variant = "body2",
-  underline= "always",
+  underline = "always",
+  color = "primary",
 }: Props) {
   return (
     <Link
@@ -41,6 +51,7 @@ function MaterialRouterLink({
       component={RouterLink}
       to={to}
       underline={underline}
+      color={color}
     >
       {children}
     </Link>

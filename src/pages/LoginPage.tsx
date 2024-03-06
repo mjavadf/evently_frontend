@@ -1,8 +1,10 @@
 import {
   Alert,
+  Backdrop,
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControlLabel,
   Grid,
   TextField,
@@ -31,21 +33,33 @@ function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  
   let navigate: NavigateFunction = useNavigate();
-  
+
   const onSubmit = (data: FieldValues) => {
+    setLoading(true);
     login(data.username, data.password)
       .then(() => {
         triggerAuth();
         navigate("/");
         window.location.reload();
       })
-      .catch((err) => setError(err.response.data.detail));
+      .catch((err) => {
+        setError(err.response.data.detail);
+        setLoading(false);
+      });
   };
 
   return (
     <AuthContainer formTitle="Sign In">
+      {loading && (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+          onClick={() => setLoading(false)}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box
         component="form"
         noValidate
