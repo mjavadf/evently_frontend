@@ -15,12 +15,31 @@ export const login = (username: string, password: string) => {
         return response.data
       }
 
-      return {access: "", refresh: ""}
+      return response.data
     });
 };
 
 export const logout = () => {
   localStorage.removeItem("user");
+};
+
+
+export const register = (
+  username: string,
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+  phoneNumber: string
+) => {
+  return axios.post(API_URL + "users/", {
+    username,
+    email,
+    password,
+    firstName,
+    lastName,
+    phoneNumber,
+  }).then(response => {return response.data});
 };
 
 export const getCurrentUser = () => {
