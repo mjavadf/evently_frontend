@@ -6,19 +6,21 @@ import {
   Container,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import MaterialRouterLink from "./MaterialRouterLink";
-
+import { getCurrentUser, logout } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import { useAuthStatus } from "../store";
 
 function NavBar() {
-  const [isAuth, setIsAuth] = useState(false);
-  useEffect(() => {
-    if (localStorage.getItem("access_token") !== null) {
-      setIsAuth(true);
-    }
-  }, [isAuth]);
+  const {
+    login: loginStore,
+    logout: logoutStore,
+    isAtuhenticated,
+  } = useAuthStatus();
+  const currentUser = getCurrentUser();
+  const navigate = useNavigate();
 
   return (
     <AppBar position="static" id="navbar">
@@ -52,8 +54,15 @@ function NavBar() {
             </Typography>
           </Stack>
           <Box>
-            {isAuth ? (
-              <Button variant="outlined" href="/logout">
+            {currentUser || isAtuhenticated ? (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  logout();
+                  logoutStore()
+                  navigate("/");
+                }}
+              >
                 Logout
               </Button>
             ) : (
