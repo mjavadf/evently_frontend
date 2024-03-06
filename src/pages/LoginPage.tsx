@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -10,16 +11,37 @@ import { FieldValues, useForm } from "react-hook-form";
 import AuthContainer from "../components/AuthContainer";
 import MaterialRouterLink from "../components/MaterialRouterLink";
 import { login } from "../services/authService";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { NavigateFunction, useNavigate, useNavigation } from "react-router-dom";
 import { useAuthStatus } from "../store";
+import { useState } from "react";
+
+interface FormData {
+  username: string;
+  password: string;
+}
 
 function LoginPage() {
-  const { register, handleSubmit } = useForm();
-  const {login: triggerAuth} = useAuthStatus()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+  const { login: triggerAuth } = useAuthStatus();
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  
+  let navigate: NavigateFunction = useNavigate();
+  
   const onSubmit = (data: FieldValues) => {
-    login(data.email, data.password);
-    triggerAuth()
+    login(data.username, data.password)
+      .then(() => {
+        triggerAuth();
+        navigate("/");
+        window.location.reload();
+      })
+      .catch((err) => setError(err.response.data.detail));
   };
 
   return (
@@ -30,15 +52,28 @@ function LoginPage() {
         sx={{ mt: 1 }}
         onSubmit={handleSubmit(onSubmit)}
       >
+        {error && (
+          <Alert variant="filled" severity="error" sx={{ marginY: 2 }}>
+            {error}
+          </Alert>
+        )}
         <TextField
           margin="normal"
           required
           fullWidth
-          id="email"
-          label="Email Address"
-          autoComplete="email"
+          id="username"
+          label="Username"
+          autoComplete="username"
           autoFocus
-          {...register("email")}
+          {...register("username", { required: true, minLength: 3 })}
+          error={Boolean(errors.username)}
+          helperText={
+            errors.username
+              ? errors.username.type === "required"
+                ? "Username is required."
+                : "Username should be at least 3 characters"
+              : ""
+          }
         />
         <TextField
           margin="normal"
@@ -48,8 +83,17 @@ function LoginPage() {
           type="password"
           id="password"
           autoComplete="current-password"
-          {...register("password")}
+          {...register("password", { required: true, minLength: 8 })}
+          error={Boolean(errors.password)}
+          helperText={
+            errors.password
+              ? errors.password.type === "required"
+                ? "Password is required."
+                : "Password should be at least 8 characters"
+              : ""
+          }
         />
+
         <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
           label="Remember me"
