@@ -1,47 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import authHeader from "../services/auth-header";
-import EventCard from "./EventCard";
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import { Link, useNavigate, useNavigation } from "react-router-dom";
-
-export interface Event {
-  id: number;
-  title: string;
-  date: string;
-  price: string;
-  images: Image[] | [];
-}
-
-interface Image {
-  id: string;
-  image: string;
-}
-
-export interface FetchResponse {
-  count: number;
-  results: Event[];
-}
+import { Link, useNavigate } from "react-router-dom";
+import useEvents from "../hooks/useEvents";
+import EventCard from "./EventCard";
 
 function EventsList() {
   const navigate = useNavigate();
 
-  const fetchEvents = () =>
-    axios
-      .get<FetchResponse>("http://127.0.0.1:8000/events/", {
-        headers: authHeader(),
-      })
-      .then((res) => res.data.results);
-
-  const {
-    data: events,
-    error,
-    isLoading,
-  } = useQuery<Event[], Error>({
-    queryKey: ["events"],
-    queryFn: fetchEvents,
-  });
+  const { data: events, error, isLoading } = useEvents();
 
   if (error?.message.includes("401"))
     return (
