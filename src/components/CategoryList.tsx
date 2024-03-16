@@ -6,8 +6,7 @@ import {
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import useCategories from "../hooks/useCategories";
 
 interface Category {
   id: number;
@@ -20,15 +19,9 @@ export interface FetchResponse {
 }
 
 function CategoryList() {
-  const fetchTodos = () =>
-    axios
-      .get<FetchResponse>("http://127.0.0.1:8000/categories")
-      .then((res) => res.data.results);
+  
 
-  const { data: categories } = useQuery<Category[], Error>({
-    queryKey: ["categoeries"],
-    queryFn: fetchTodos,
-  });
+  const { data: categories } = useCategories()
 
   return (
     <Box>
