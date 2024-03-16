@@ -7,6 +7,8 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import router from "./routes";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const darkTheme = createTheme({
   palette: {
@@ -18,12 +20,14 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   </React.StrictMode>
 );
