@@ -19,15 +19,6 @@ import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useState } from "react";
 
-export interface Event {
-  title: string;
-  description: string;
-  date: Dayjs | null;
-  end_date: Dayjs | null;
-  category?: number;
-  location?: number;
-}
-
 interface FormData {
   title: string;
   description: string;
@@ -35,6 +26,7 @@ interface FormData {
   endDate: Dayjs | null;
   category: number;
   location: number;
+  cover: File | null
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -57,19 +49,7 @@ const FormGrid = styled(Grid)(() => ({
 function EventCreatePage() {
   const queryClient = useQueryClient();
   const [success, setSuccess] = useState(false);
-
-  const createEvent = useMutation({
-    mutationFn: (event: Event) => {
-      return axios
-        .post<Event>("http://127.0.0.1:8000/events/", event, {
-          headers: authHeader(),
-        })
-        .then((res) => res.data);
-    },
-    onSuccess: (data, newData) => {
-      setSuccess(true);
-    },
-  });
+  const [error, setError] = useState()
 
   const {
     control,
@@ -87,15 +67,32 @@ function EventCreatePage() {
   const { data: locations, isLoading: loadingLocations } = useLocations();
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    createEvent.mutate({
-      title: data.title,
-      description: data.description,
-      date: data.date,
-      end_date: data.endDate,
-      category: data.category,
-      location: data.location,
-    });
+    data.date = data.date ? data.date.format("YYYY-MM-DDTHH:mm:ss") : null;
+    data.endDate = data.endDate
+      ? data.endDate.format("YYYY-MM-DDTHH:mm:ss")
+      : null;
+
+    // console.log(data);
+    const formData = new FormData();
+    for (const key in data) {
+      if (key === "cover") {
+        if (data[key].length > 0) formData.append(key, data[key][0]);
+      } else {
+        formData.append(key, data[key]);
+      }
+    }
+
+    console.log(formData.get("cover"));
+
+    axios
+      .post<Event>("http://127.0.0.1:8000/events/", formData, {
+        headers: authHeader(),
+      })
+      .then((res) => {
+        setSuccess(true)
+        return res.data
+      })
+    .catch(err => setError(err));
   };
 
   if (loadingCategories || loadingLocations) return <LinearProgress />;
@@ -195,7 +192,7 @@ function EventCreatePage() {
           </TextField>
         </FormGrid>
         <FormGrid item xs={12} md={6}>
-          {/* Image Upload Button */}
+          {/* Cover Upload Button */}
           <Button
             component="label"
             role={undefined}
@@ -204,8 +201,8 @@ function EventCreatePage() {
             sx={{ height: "100%" }}
             startIcon={<CloudUploadIcon />}
           >
-            Upload Event Image
-            <VisuallyHiddenInput type="file" />
+            Upload Event Cover
+            <VisuallyHiddenInput type="file" {...register('cover')}/>
           </Button>
         </FormGrid>
         <FormGrid item xs={6}>
