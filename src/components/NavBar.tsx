@@ -12,6 +12,7 @@ import MaterialRouterLink from "./MaterialRouterLink";
 import { getCurrentUser, logout } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useAuthStatus } from "../store";
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
 function NavBar() {
   const {
@@ -55,16 +56,27 @@ function NavBar() {
           </Stack>
           <Box>
             {currentUser || isAtuhenticated ? (
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  logout();
-                  logoutStore()
-                  navigate("/");
-                }}
-              >
-                Logout
-              </Button>
+              <Stack direction="row" gap={2}>
+                <Button
+                  variant="contained"
+                  endIcon={<EditCalendarIcon />}
+                  onClick={() => {
+                    navigate("/events/create");
+                  }}
+                >
+                  Create new event
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    logout();
+                    logoutStore();
+                    navigate("/");
+                  }}
+                >
+                  Logout
+                </Button>
+              </Stack>
             ) : (
               <>
                 <MaterialRouterLink to="/login" variant="body2">
