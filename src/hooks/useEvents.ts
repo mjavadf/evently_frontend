@@ -7,12 +7,7 @@ export interface Event {
   title: string;
   date: string;
   price: string;
-  images: Image[] | [];
-}
-
-interface Image {
-  id: string;
-  image: string;
+  cover: string | null;
 }
 
 export interface FetchResponse {

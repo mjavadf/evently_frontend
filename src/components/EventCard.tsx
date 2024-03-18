@@ -1,5 +1,5 @@
 import React from "react";
-import { Event } from "./EventsList";
+import { Event } from "../hooks/useEvents";
 import { Card, CardContent, CardMedia, Paper, Typography } from "@mui/material";
 
 interface Props {
@@ -11,7 +11,7 @@ function EventCard({ event }: Props) {
     <Card key={event.id} variant="outlined">
       <CardMedia
         sx={{ height: 140 }}
-        image={event.images.length != 0 ? event.images[0].image : "https://source.unsplash.com/random?event"}
+        image={event.cover != null ? event.cover : "https://source.unsplash.com/random?event"}
       />
       <CardContent>
         <Typography>{event.title}</Typography>
