@@ -18,6 +18,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useState } from "react";
+import { getCurrentUser } from "../services/authService";
+import { useAuthStatus } from "../store";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   title: string;
@@ -26,7 +29,7 @@ interface FormData {
   endDate: Dayjs | null;
   category: number;
   location: number;
-  cover: File | null
+  cover: File | null;
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -49,7 +52,10 @@ const FormGrid = styled(Grid)(() => ({
 function EventCreatePage() {
   const queryClient = useQueryClient();
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState()
+  const [error, setError] = useState();
+  const currentUser = getCurrentUser();
+  
+  const navigate = useNavigate()
 
   const {
     control,
@@ -72,7 +78,6 @@ function EventCreatePage() {
       ? data.endDate.format("YYYY-MM-DDTHH:mm:ss")
       : null;
 
-    // console.log(data);
     const formData = new FormData();
     for (const key in data) {
       if (key === "cover") {
@@ -82,20 +87,23 @@ function EventCreatePage() {
       }
     }
 
-    console.log(formData.get("cover"));
-
     axios
       .post<Event>("http://127.0.0.1:8000/events/", formData, {
         headers: authHeader(),
       })
       .then((res) => {
-        setSuccess(true)
-        return res.data
+        setSuccess(true);
+        return res.data;
       })
-    .catch(err => setError(err));
+      .catch((err) => setError(err));
   };
 
   if (loadingCategories || loadingLocations) return <LinearProgress />;
+
+  if (currentUser == null)
+    return (
+      navigate("/login")
+    );
 
   return (
     <Box
@@ -202,7 +210,7 @@ function EventCreatePage() {
             startIcon={<CloudUploadIcon />}
           >
             Upload Event Cover
-            <VisuallyHiddenInput type="file" {...register('cover')}/>
+            <VisuallyHiddenInput type="file" {...register("cover")} />
           </Button>
         </FormGrid>
         <FormGrid item xs={6}>
