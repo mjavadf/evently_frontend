@@ -101,9 +101,7 @@ function EventCreatePage() {
   if (loadingCategories || loadingLocations) return <LinearProgress />;
 
   if (currentUser == null)
-    return (
       navigate("/login")
-    );
 
   return (
     <Box
