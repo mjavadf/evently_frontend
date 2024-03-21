@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import EventCreatePage from "./pages/EventCreatePage";
+import EventDetailPage from "./pages/EventDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUpPage /> },
       { path: "forgot_password", element: <ForgotPasswordPage /> },
       { path: "events/create", element: <EventCreatePage /> },
+      { path: "events/:id", element: <EventDetailPage /> },
   ],
   },
 ]);
