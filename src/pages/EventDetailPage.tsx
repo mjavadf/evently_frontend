@@ -1,23 +1,23 @@
+import AddIcon from "@mui/icons-material/Add";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import FaceIcon from "@mui/icons-material/Face";
 import EditIcon from "@mui/icons-material/Edit";
+import FaceIcon from "@mui/icons-material/Face";
 import {
-  Avatar,
   Box,
   Button,
   Chip,
   Container,
-  Fab,
   Grid,
-  IconButton,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
-import useEvent from "../hooks/useEvent";
 import EventTicket from "../components/EventTicket";
+import useEvent from "../hooks/useEvent";
 import { getCurrentUser } from "../services/authService";
+import { useState } from "react";
+import EventTicketForm from "../components/EventTicketForm";
 
 function EventDetailPage() {
   const params = useParams();
@@ -25,6 +25,8 @@ function EventDetailPage() {
   const currentUserId = getCurrentUser()?.user_id;
 
   const { data: event, error, isLoading } = useEvent(parseInt(eventId));
+
+  const [newTicketForm, setNewTicketForm ] = useState(false);
 
   return (
     <Container>
@@ -101,6 +103,17 @@ function EventDetailPage() {
             {event?.tickets.map((ticket) => (
               <EventTicket ticket={ticket} key={ticket.id} />
             ))}
+            {(currentUserId === event?.organizer.id && !newTicketForm) && (
+              <Button
+                fullWidth
+                variant="outlined"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={() => setNewTicketForm(true)}>Add new ticket</Button>
+            )}
+            {newTicketForm && (
+              <EventTicketForm />
+            )}
           </Stack>
         </Grid>
       </Grid>
