@@ -27,9 +27,8 @@ function EventsList() {
   return (
     <Grid container spacing={2} padding={3}>
       {events?.map((e) => (
-        <Grid item xs={4}>
-          {" "}
-          <EventCard event={e} />{" "}
+        <Grid item xs={4} key={e.id}>
+          <EventCard event={e} />
         </Grid>
       ))}
     </Grid>
