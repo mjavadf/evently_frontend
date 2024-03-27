@@ -103,7 +103,7 @@ function EventDetailPage() {
           </Typography>
           <Stack spacing={2}>
             {event?.tickets.map((ticket) => (
-              <EventTicket ticket={ticket} key={ticket.id} />
+              <EventTicket ticket={ticket} key={ticket.id} organizerId={event.organizer.id} eventId={event.id}/>
             ))}
             {currentUserId === event?.organizer.id && !newTicketForm && (
               <Button
