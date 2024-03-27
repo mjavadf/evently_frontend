@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Dayjs } from "dayjs";
 
 export interface Event {
+  id: number;
   title: string;
   description: string;
   date: string;

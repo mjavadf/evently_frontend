@@ -9,10 +9,10 @@ import {
   Container,
   Grid,
   Stack,
-  Typography
+  Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import EventTicket from "../components/EventTicket";
 import useEvent from "../hooks/useEvent";
 import { getCurrentUser } from "../services/authService";
@@ -26,7 +26,9 @@ function EventDetailPage() {
 
   const { data: event, error, isLoading } = useEvent(parseInt(eventId));
 
-  const [newTicketForm, setNewTicketForm ] = useState(false);
+  const [newTicketForm, setNewTicketForm] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <Container>
@@ -54,7 +56,7 @@ function EventDetailPage() {
           xs={12}
           sm={9}
           paddingRight={2}
-          alignContent={"center"}
+          alignContent={"flex-start"}
         >
           {/* Title */}
           <Grid item xs={12}>
@@ -103,16 +105,23 @@ function EventDetailPage() {
             {event?.tickets.map((ticket) => (
               <EventTicket ticket={ticket} key={ticket.id} />
             ))}
-            {(currentUserId === event?.organizer.id && !newTicketForm) && (
+            {currentUserId === event?.organizer.id && !newTicketForm && (
               <Button
                 fullWidth
                 variant="outlined"
                 color="primary"
                 startIcon={<AddIcon />}
-                onClick={() => setNewTicketForm(true)}>Add new ticket</Button>
+                onClick={() => setNewTicketForm(true)}
+              >
+                Add new ticket
+              </Button>
             )}
             {newTicketForm && (
-              <EventTicketForm />
+              <EventTicketForm
+                eventId={event?.id || -1}
+                onCancel={() => setNewTicketForm(false)}
+                onSuccessfulSubmit={() => navigate(0)}
+              />
             )}
           </Stack>
         </Grid>

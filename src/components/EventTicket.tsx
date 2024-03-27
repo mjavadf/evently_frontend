@@ -32,7 +32,7 @@ function EventTicket({ ticket }: Readonly<Props>) {
           {ticket.title}
         </Typography>
         <Typography variant="body1" gutterBottom noWrap>
-          {ticket.description}asax ass fvs azxa aas
+          {ticket.description}
         </Typography>
         <Chip
           color="info"

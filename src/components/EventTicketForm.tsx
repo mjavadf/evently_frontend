@@ -6,9 +6,47 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import React from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { Ticket } from "../hooks/useEvent";
 
-function EventTicketForm() {
+interface FormData {
+  id: number;
+  title: string;
+  price: number;
+  capacity: number;
+  description: string;
+  needs_approval: boolean;
+}
+
+interface Props {
+  onCancel: () => void;
+  onSuccessfulSubmit: () => void;
+  eventId: number;
+}
+
+function EventTicketForm({ onCancel, eventId, onSuccessfulSubmit }: Props) {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = (data: FormData) => {
+    addTicket.mutate(data);
+  };
+
+  const addTicket = useMutation({
+    mutationFn: (ticket: FormData) => {
+      return axios
+        .post<Ticket>(`http://127.0.0.1:8000/events/${eventId}/tickets/`, ticket)
+        .then((res) => res.data);
+    },
+    onSuccess: () => onSuccessfulSubmit(),
+  })
+
   return (
     <Card variant="outlined">
       <Grid padding={2} component="form" noValidate container spacing={1}>
@@ -20,7 +58,7 @@ function EventTicketForm() {
             variant="outlined"
             required
             fullWidth
-            // {...register("title", { required: true, minLength: 3 })}
+            {...register("title", { required: true, minLength: 3 })}
           />
         </Grid>
         {/* Price */}
@@ -32,7 +70,7 @@ function EventTicketForm() {
             type="number"
             required
             fullWidth
-            // {...register("price", { required: true })}
+            {...register("price", { required: true })}
           />
         </Grid>
         {/* Capacity */}
@@ -44,7 +82,7 @@ function EventTicketForm() {
             type="number"
             required
             fullWidth
-            // {...register("capacity", { required: true })}
+            {...register("capacity", { required: true })}
           />
         </Grid>
         {/* Description */}
@@ -53,27 +91,52 @@ function EventTicketForm() {
             label="Description"
             id="description"
             variant="outlined"
-            required
             fullWidth
             multiline
             rows={3}
-            // {...register("description", { required: true })}
+            {...register("description")}
           />
         </Grid>
         {/* Needs approval */}
         <Grid item xs={12}>
-          <FormControlLabel control={<Checkbox />} label="Needs approval" />
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Needs approval"
+            {...register("needs_approval")}
+          />
         </Grid>
+        {/* ID */}
+        <TextField
+          label="id"
+          id="id"
+          variant="outlined"
+          {...register("id")}
+          value={eventId}
+          sx={{ display: "none" }}
+        />
         {/* Submit Button */}
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            // onClick={handleSubmit(onSubmit)}
-          >Submit</Button>
-          </Grid>
+            onClick={handleSubmit(onSubmit)}
+          >
+            Submit
+          </Button>
+        </Grid>
+        {/* Cancel Button */}
+        <Grid item xs={6}>
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+        </Grid>
       </Grid>
     </Card>
   );
