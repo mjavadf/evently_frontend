@@ -13,7 +13,18 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
+    primary: {
+      main: '#00beaf',
+    },
+    background: {
+      default: '#0D0E16',
+      paper: '#080914',
+    },
   },
+  shape: {
+    borderRadius: 6,
+  },
+  
 });
 
 const queryClient = new QueryClient();
