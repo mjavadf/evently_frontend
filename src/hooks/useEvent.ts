@@ -12,11 +12,23 @@ export interface Event {
   location: number;
   cover: string;
   organizer: Organizer;
+  tickets: Ticket[];
 }
 
 interface Organizer {
   id: number;
   username: string;
+}
+
+export interface Ticket {
+  id: number;
+  title: string;
+  price: string;
+  capacity: number;
+  purchased: number;
+  available: boolean;
+  description: string;
+  needs_approval: boolean;
 }
 
 const useEvent = (id: number) => {
