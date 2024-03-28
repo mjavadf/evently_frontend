@@ -2,9 +2,11 @@ import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import useEvents from "../hooks/useEvents";
 import EventCard from "./EventCard";
+import SkeletonCard from "./SkeletonCard";
 
 function EventsList() {
   const navigate = useNavigate();
+  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   const { data: events, error, isLoading } = useEvents();
 
@@ -19,9 +21,13 @@ function EventsList() {
 
   if (isLoading)
     return (
-      <Box padding={3}>
-        <CircularProgress />
-      </Box>
+      <Grid container spacing={2} padding={3}>
+      {skeletons?.map((e) => (
+        <Grid item xs={12} sm={6} md={4} key={e}>
+          <SkeletonCard />
+        </Grid>
+      ))}
+    </Grid>
     );
 
   return (
