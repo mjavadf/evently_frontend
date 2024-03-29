@@ -1,6 +1,7 @@
 import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useQuery } from "@tanstack/react-query";
+import apiClient from "../services/api-client";
 
 export interface Event {
   id: number;
@@ -17,10 +18,8 @@ export interface FetchResponse {
 
 const useEvents = () => {
   const fetchEvents = () =>
-    axios
-      .get<FetchResponse>("http://127.0.0.1:8000/events/", {
-        headers: authHeader(),
-      })
+    apiClient
+      .get<FetchResponse>("/events/")
       .then((res) => res.data.results);
 
   return useQuery<Event[], Error>({

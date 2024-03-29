@@ -1,6 +1,7 @@
 import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useQuery } from "@tanstack/react-query";
+import apiClient from "../services/api-client";
 
 interface Location {
   id: number;
@@ -12,10 +13,8 @@ interface Location {
 
 const useLocations = () => {
   const fetchEvents = () =>
-    axios
-      .get<Location[]>("http://127.0.0.1:8000/locations/", {
-        headers: authHeader(),
-      })
+    apiClient
+      .get<Location[]>("/locations/")
       .then((res) => res.data);
 
   return useQuery<Location[], Error>({

@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Ticket } from "../hooks/useEvent";
+import apiClient from "../services/api-client";
 
 interface FormData {
   id: number;
@@ -40,8 +41,8 @@ function EventTicketForm({ onCancel, eventId, onSuccessfulSubmit }: Props) {
 
   const addTicket = useMutation({
     mutationFn: (ticket: FormData) => {
-      return axios
-        .post<Ticket>(`http://127.0.0.1:8000/events/${eventId}/tickets/`, ticket)
+      return apiClient
+        .post<Ticket>(`/events/${eventId}/tickets/`, ticket)
         .then((res) => res.data);
     },
     onSuccess: () => onSuccessfulSubmit(),

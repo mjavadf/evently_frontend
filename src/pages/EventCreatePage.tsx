@@ -89,7 +89,10 @@ function EventCreatePage() {
 
     axios
       .post<Event>("http://127.0.0.1:8000/events/", formData, {
-        headers: authHeader(),
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': authHeader(),
+        },
       })
       .then((res) => {
         setSuccess(true);

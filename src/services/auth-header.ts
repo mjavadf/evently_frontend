@@ -4,8 +4,8 @@ export default function authHeader() {
   if (userStr) user = JSON.parse(userStr);
 
   if (user && user.access) {
-    return { Authorization: "JWT " + user.access };
+    return "JWT " + user.access ;
   } else {
-    return { Authorization: "" };
+    return "";
   }
 }

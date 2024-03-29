@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import apiClient from "../services/api-client";
 
 interface Category {
   id: number;
@@ -13,8 +14,8 @@ interface FetchResponse {
 
 const useCategories = () => {
   const fetchTodos = () =>
-    axios
-      .get<FetchResponse>("http://127.0.0.1:8000/categories")
+    apiClient
+      .get<FetchResponse>("/categories")
       .then((res) => res.data.results);
 
   return useQuery<Category[], Error>({

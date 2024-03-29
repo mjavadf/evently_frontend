@@ -2,6 +2,7 @@ import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useQuery } from "@tanstack/react-query";
 import { Dayjs } from "dayjs";
+import apiClient from "../services/api-client";
 
 export interface Event {
   id: number;
@@ -34,10 +35,8 @@ export interface Ticket {
 
 const useEvent = (id: number) => {
   const fetchEvents = () =>
-    axios
-      .get<Event>(`http://127.0.0.1:8000/events/${id}`, {
-        headers: authHeader(),
-      })
+    apiClient
+      .get<Event>(`/events/${id}`)
       .then((res) => res.data);
 
   return useQuery<Event, Error>({
