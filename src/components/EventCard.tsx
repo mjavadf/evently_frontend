@@ -1,5 +1,5 @@
 import React from "react";
-import { Event } from "../hooks/useEvents";
+import Event from "../entities/Event";
 import {
   Box,
   Button,

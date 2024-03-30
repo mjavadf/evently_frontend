@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { Ticket } from "../hooks/useEvent";
+import  Ticket  from "../entities/Ticket" ;
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
@@ -73,7 +73,7 @@ function EventTicket({ ticket, organizerId, eventId }: Readonly<Props>) {
             color="info"
             size="small"
             icon={<EventSeatIcon />}
-            label={`Available seats: ${ticket.capacity - ticket.purchased}`}
+            label={`Available seats: ${ticket.capacity - (ticket.purchased ?? 0)}`}
           />
 
           {ticket.needs_approval && (
