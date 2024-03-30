@@ -1,3 +1,6 @@
+import EventSeatIcon from "@mui/icons-material/EventSeat";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
   Button,
   Card,
@@ -9,17 +12,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
   Typography,
 } from "@mui/material";
 import React from "react";
-import  Ticket  from "../entities/Ticket" ;
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import EventSeatIcon from "@mui/icons-material/EventSeat";
-import { getCurrentUser } from "../services/authService";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Ticket from "../entities/Ticket";
+import APIClient from "../services/api-client";
+import { getCurrentUser } from "../services/authService";
 
 interface Props {
   ticket: Ticket;
@@ -43,8 +42,10 @@ function EventTicket({ ticket, organizerId, eventId }: Readonly<Props>) {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`http://127.0.0.1:8000/events/${eventId}/tickets/${ticket.id}/`)
+    const apiClient = new APIClient<Ticket>(`events/${eventId}/tickets`);
+
+    apiClient
+      .delete(ticket.id)
       .then(() => {
         navigate(0);
       })
@@ -73,7 +74,9 @@ function EventTicket({ ticket, organizerId, eventId }: Readonly<Props>) {
             color="info"
             size="small"
             icon={<EventSeatIcon />}
-            label={`Available seats: ${ticket.capacity - (ticket.purchased ?? 0)}`}
+            label={`Available seats: ${
+              ticket.capacity - (ticket.purchased ?? 0)
+            }`}
           />
 
           {ticket.needs_approval && (

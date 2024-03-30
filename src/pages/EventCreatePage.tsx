@@ -11,14 +11,13 @@ import {
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { Dayjs } from "dayjs";
 import { useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import useCategories from "../hooks/useCategories";
 import useLocations from "../hooks/useLocations";
-import authHeader from "../services/auth-header";
+import APIClient from "../services/api-client";
 import { getCurrentUser } from "../services/authService";
 
 interface FormData {
@@ -53,8 +52,8 @@ function EventCreatePage() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState();
   const currentUser = getCurrentUser();
-  
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
 
   const {
     control,
@@ -86,13 +85,10 @@ function EventCreatePage() {
       }
     }
 
-    axios
-      .post<Event>("http://127.0.0.1:8000/events/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          'Authorization': authHeader(),
-        },
-      })
+    const apiClient = new APIClient<FieldValues>("events/");
+
+    apiClient
+      .create(formData, { headers: { "Content-Type": "multipart/form-data" } })
       .then((res) => {
         setSuccess(true);
         return res.data;
@@ -102,8 +98,7 @@ function EventCreatePage() {
 
   if (loadingCategories || loadingLocations) return <LinearProgress />;
 
-  if (currentUser == null)
-      navigate("/login")
+  if (currentUser == null) navigate("/login");
 
   return (
     <Box

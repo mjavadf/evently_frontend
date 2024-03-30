@@ -7,10 +7,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import Ticket  from "../entities/Ticket";
-import apiClient from "../services/api-client";
 import APIClient from "../services/api-client";
 
 interface FormData {
@@ -40,12 +37,11 @@ function EventTicketForm({ onCancel, eventId, onSuccessfulSubmit }: Props) {
     addTicket.mutate(data);
   };
   
-  const apiClient = new APIClient<Ticket>(`/events/${eventId}/tickets/`);
+  const apiClient = new APIClient<FormData>(`/events/${eventId}/tickets/`);
 
-  // TODO: use services to add a ticket
   const addTicket = useMutation({
     mutationFn: (ticket: FormData) => {
-      return axios.post(apiClient.endpoint, ticket);
+      return apiClient.create(ticket);
     },
     onSuccess: () => onSuccessfulSubmit(),
   })

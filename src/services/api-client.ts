@@ -69,8 +69,31 @@ class APIClient<T> {
    * @param data - The data for the new item.
    * @returns A promise that resolves to the created item.
    */
-  create = (data: T) => {
-    return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
+  create = (data: T, config?: AxiosRequestConfig) => {
+    return axiosInstance
+      .post<T>(this.endpoint, data, config)
+      .then((res) => res.data);
+  };
+
+  /**
+   * Updates an existing item in the API.
+   * @param id - The ID of the item to update.
+   * @param data - The updated data for the item.
+   * @returns A promise that resolves to the updated item.
+   */
+  update = (id: number | string, data: T, config?: AxiosRequestConfig) => {
+    return axiosInstance
+      .put<T>(`${this.endpoint}/${id}`, data, config)
+      .then((res) => res.data);
+  };
+
+  /**
+   * Deletes an item from the API.
+   * @param id - The ID of the item to delete.
+   * @returns A promise that resolves when the item is deleted.
+   */
+  delete = (id: number | string) => {
+    return axiosInstance.delete(`${this.endpoint}/${id}`);
   };
 }
 
