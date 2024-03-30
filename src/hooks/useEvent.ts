@@ -1,47 +1,13 @@
-import axios from "axios";
-import authHeader from "../services/auth-header";
 import { useQuery } from "@tanstack/react-query";
-import { Dayjs } from "dayjs";
-import apiClient from "../services/api-client";
-
-export interface Event {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-  endDate: Dayjs | null;
-  category: number;
-  location: number;
-  cover: string;
-  organizer: Organizer;
-  tickets: Ticket[];
-}
-
-interface Organizer {
-  id: number;
-  username: string;
-}
-
-export interface Ticket {
-  id: number;
-  title: string;
-  price: string;
-  capacity: number;
-  purchased: number;
-  available: boolean;
-  description: string;
-  needs_approval: boolean;
-}
+import APIClient from "../services/api-client";
+import Event from "../entities/Event";
 
 const useEvent = (id: number) => {
-  const fetchEvents = () =>
-    apiClient
-      .get<Event>(`/events/${id}`)
-      .then((res) => res.data);
+  const apiClient = new APIClient<Event>("/events");
 
-  return useQuery<Event, Error>({
+  return useQuery({
     queryKey: ["events", id],
-    queryFn: fetchEvents,
+    queryFn: () => apiClient.get(id),
     staleTime: 30 * 60 * 1000, // 30 Mins
   });
 };

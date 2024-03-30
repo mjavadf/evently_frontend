@@ -33,7 +33,7 @@ function CategoryList() {
           Categories
         </ListSubheader>
       }>
-          {categories?.map((cat) => (
+          {categories?.results.map((cat) => (
             <ListItem disablePadding key={cat.id}>
               <ListItemButton component="a" href="#simple-list">
                 <ListItemText primary={cat.name} />

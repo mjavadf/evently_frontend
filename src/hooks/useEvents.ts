@@ -1,30 +1,13 @@
-import axios from "axios";
-import authHeader from "../services/auth-header";
 import { useQuery } from "@tanstack/react-query";
-import apiClient from "../services/api-client";
-
-export interface Event {
-  id: number;
-  title: string;
-  date: string;
-  price: string;
-  cover: string | null;
-}
-
-export interface FetchResponse {
-  count: number;
-  results: Event[];
-}
+import Event from "../entities/Event";
+import APIClient, { FetchResponse } from "../services/api-client";
 
 const useEvents = () => {
-  const fetchEvents = () =>
-    apiClient
-      .get<FetchResponse>("/events/")
-      .then((res) => res.data.results);
+  const apiClient = new APIClient<Event>("/events/");
 
-  return useQuery<Event[], Error>({
+  return useQuery<FetchResponse<Event>, Error>({
     queryKey: ["events"],
-    queryFn: fetchEvents,
+    queryFn: apiClient.getAll,
     staleTime: 30 * 60 * 1000, // 30 Mins
   });
 };

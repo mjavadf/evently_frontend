@@ -10,17 +10,16 @@ import {
   styled,
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import { Dayjs } from "dayjs";
+import { useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import useCategories from "../hooks/useCategories";
 import useLocations from "../hooks/useLocations";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import authHeader from "../services/auth-header";
-import { useState } from "react";
 import { getCurrentUser } from "../services/authService";
-import { useAuthStatus } from "../store";
-import { useNavigate } from "react-router-dom";
 
 interface FormData {
   title: string;
@@ -193,9 +192,9 @@ function EventCreatePage() {
             {...register("category")}
           >
             <MenuItem>1</MenuItem>
-            {categories?.map((c) => (
-              <MenuItem key={c.id} value={c.id}>
-                {c.name}
+            {categories?.results.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.name}
               </MenuItem>
             ))}
           </TextField>
@@ -223,9 +222,9 @@ function EventCreatePage() {
             defaultValue={""}
             {...register("location")}
           >
-            {locations?.map((l) => (
-              <MenuItem key={l.id} value={l.id}>
-                {l.name}
+            {locations?.map((location) => (
+              <MenuItem key={location.id} value={location.id}>
+                {location.name}
               </MenuItem>
             ))}
           </TextField>
